@@ -1,4 +1,6 @@
-# Bizshift-Request Creator
+# Codegen Swagger Bizshift
+
+This repository forked by [swagger-js-codegen](https://github.com/wcandillon/swagger-js-codegen).
 
 ## How to start
 
