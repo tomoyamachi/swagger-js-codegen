@@ -1,3 +1,20 @@
+# Bizshift-Request Creator
+
+## How to start
+
+This project create custome template files, by `swagger-bizshift`'s JSON file.
+
+```
+$ git clone https://gitlab.gnext.asia/tamachi/swagger-bizshift  # Forked project
+$ git clone https://gitlab.gnext.asia/tamachi/swagger-js-codegen
+$ cd swagger-js-codegen
+$ npm i
+$ node output_request.js > /path/to/app-bizshift/app/js/swagger/request.js
+```
+
+
+----
+
 # Swagger to JS & Typescript Codegen
 [![Circle CI](https://circleci.com/gh/wcandillon/swagger-js-codegen.svg?style=svg)](https://circleci.com/gh/wcandillon/swagger-js-codegen) [![NPM version](http://img.shields.io/npm/v/swagger-js-codegen.svg?style=flat)](http://badge.fury.io/js/swagger-js-codegen)
 
