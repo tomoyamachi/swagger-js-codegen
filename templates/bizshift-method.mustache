@@ -14,7 +14,6 @@ export const {{&methodName}} = function(parameters = {}) {
   let body;
   let queryParameters = {};
   let form = {};
-
   {{#parameters}}
     {{#isQueryParameter}}
       {{#isSingleton}}
@@ -32,7 +31,6 @@ export const {{&methodName}} = function(parameters = {}) {
           /** set default value **/
           queryParameters['{{&name}}'] = {{&default}};
         {{/default}}
-
         {{^isPatternType}}
           if(parameters['{{&camelCaseName}}'] !== undefined){
           queryParameters['{{&name}}'] = parameters['{{&camelCaseName}}'];
@@ -45,24 +43,13 @@ export const {{&methodName}} = function(parameters = {}) {
       path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
     {{/isPathParameter}}
 
-    {{#isHeaderParameter}}
-      {{#isSingleton}}
-        headers['{{&name}}'] = '{{&singleton}}';
-      {{/isSingleton}}
-      {{^isSingleton}}
-        if(parameters['{{&camelCaseName}}'] !== undefined){
-        headers['{{&name}}'] = parameters['{{&camelCaseName}}'];
-        }
-      {{/isSingleton}}
-    {{/isHeaderParameter}}
-
     {{#isBodyParameter}}
       if(parameters['{{&camelCaseName}}'] !== undefined){
       body = parameters['{{&camelCaseName}}'];
       }
     {{/isBodyParameter}}
 
-    {{#isFormParameter}}
+    {{#isJsonParameter}}
       {{#isSingleton}}
         form['{{&name}}'] = '{{&singleton}}';
       {{/isSingleton}}
@@ -71,7 +58,7 @@ export const {{&methodName}} = function(parameters = {}) {
         form['{{&name}}'] = parameters['{{&camelCaseName}}'];
         }
       {{/isSingleton}}
-    {{/isFormParameter}}
+    {{/isJsonParameter}}
 
     {{#required}}
       if(parameters['{{&camelCaseName}}'] === undefined){
@@ -81,14 +68,6 @@ export const {{&methodName}} = function(parameters = {}) {
     {{/required}}
 
   {{/parameters}}
-
-  {{#isSecure}}
-    headers = this.setAuthHeaders(headers);
-  {{/isSecure}}
-  {{#headers}}
-    headers['{{&name}}'] = [{{&value}}];
-  {{/headers}}
-
   queryParameters = mergeQueryParams(parameters, queryParameters);
   return request('{{method}}', domain + path, body, queryParameters, form, config);
 };

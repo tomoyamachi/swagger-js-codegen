@@ -36,6 +36,16 @@ export const request = (method, url, body, queryParameters, form, config) => {
   }
 };
 
+function mergeQueryParams(parameters, queryParameters) {
+  if (parameters.$queryParameters) {
+    Object.keys(parameters.$queryParameters)
+      .forEach(function(parameterName) {
+        let parameter = parameters.$queryParameters[parameterName];
+        queryParameters[parameterName] = parameter;
+      });
+  }
+  return queryParameters;
+}
 
 {{#methods}}
   {{> method}}
