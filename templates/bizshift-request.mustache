@@ -4,6 +4,7 @@
  */
 import axios from 'axios';
 import qs from 'qs';
+import { assign, isEmpty } from 'lodash';
 
 let domain = process.env.API_ORIGIN_VERSION;
 
@@ -15,6 +16,7 @@ export const setDomain = ($domain) => {
   domain = $domain;
 };
 
+
 export const request = (method, url, body, queryParameters, form, config) => {
   method = method.toLowerCase();
   let keys = Object.keys(queryParameters);
@@ -23,17 +25,20 @@ export const request = (method, url, body, queryParameters, form, config) => {
     queryUrl = url + '?' + qs.stringify(queryParameters);
   }
 
-  config = {
+  const defaultConfig = {
+    method: method,
     responseType: 'json',
-    withCredential: true
-  }
-  if (body) {
-    return axios[method](queryUrl, body, config);
-  } else if (method === 'get') {
-    return axios[method](queryUrl, config);
+    withCredentials: true,
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  };
+
+  let mergedConfig;
+  if(isEmpty(form)) {
+    mergedConfig = assign(defaultConfig, config);
   } else {
-    return axios[method](queryUrl, JSON.stringify(form), config);
+    mergedConfig = assign({data: form}, defaultConfig, config);
   }
+  return axios(queryUrl, mergedConfig)
 };
 
 function mergeQueryParams(parameters, queryParameters) {
