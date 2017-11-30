@@ -6,18 +6,15 @@ import axios from 'axios';
 import qs from 'qs';
 import { assign, isEmpty } from 'lodash';
 
-let domain = process.env.API_ORIGIN_VERSION;
-
-export const getDomain = () => {
-  return domain;
+export const getDomain = (parameters) => {
+  return parameters.$domain ? parameters.$domain : process.env.API_ORIGIN_VERSION;
 };
 
-export const setDomain = ($domain) => {
-  domain = $domain;
+export const getConfig = (parameters) => {
+  return parameters.$config ? parameters.$config : {};
 };
 
-
-export const request = (method, url, body, queryParameters, form, config) => {
+export const request = (method, url, queryParameters, form, config) => {
   method = method.toLowerCase();
   let keys = Object.keys(queryParameters);
   let queryUrl = url;

@@ -8,13 +8,15 @@
 {{/parameters}}
 */
 export const {{&methodName}} = function(parameters = {}) {
-  const domain = parameters.$domain ? parameters.$domain : getDomain();
-  const config = parameters.$config;
   let path = '{{&path}}';
-  let body;
   let queryParameters = {};
   let form = {};
-  {{#parameters}}
+{{#parameters}}
+    {{#required}}
+    if(parameters['{{&camelCaseName}}'] === undefined){
+        return Promise.reject(new Error('Missing required {{&paramType}} parameter: {{&camelCaseName}}'));
+    }
+    {{/required}}
     {{#isQueryParameter}}
       {{#isSingleton}}
         queryParameters['{{&name}}'] = '{{&singleton}}';
@@ -38,17 +40,9 @@ export const {{&methodName}} = function(parameters = {}) {
         {{/isPatternType}}
       {{/isSingleton}}
     {{/isQueryParameter}}
-
     {{#isPathParameter}}
       path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
     {{/isPathParameter}}
-
-    {{#isBodyParameter}}
-      if(parameters['{{&camelCaseName}}'] !== undefined){
-      body = parameters['{{&camelCaseName}}'];
-      }
-    {{/isBodyParameter}}
-
     {{#isJsonParameter}}
       {{#isSingleton}}
         form['{{&name}}'] = '{{&singleton}}';
@@ -60,14 +54,13 @@ export const {{&methodName}} = function(parameters = {}) {
       {{/isSingleton}}
     {{/isJsonParameter}}
 
-    {{#required}}
-      if(parameters['{{&camelCaseName}}'] === undefined){
-
-      return Promise.reject(new Error('Missing required {{&paramType}} parameter: {{&camelCaseName}}'));
-      }
-    {{/required}}
-
   {{/parameters}}
   queryParameters = mergeQueryParams(parameters, queryParameters);
-  return request('{{method}}', domain + path, body, queryParameters, form, config);
+  return request(
+    '{{method}}',
+    getDomain(parameters) + path,
+    queryParameters,
+    form,
+    getConfig(parameters)
+  );
 };
